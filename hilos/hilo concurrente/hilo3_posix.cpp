@@ -27,7 +27,6 @@ void *count3s_thread(void *arg){
 	int length_per_thread = length / max_threads; // cada hilo procese una parte del vector,
 	long id = (long)arg;
 	int start = id * length_per_thread;
-	printf("\nThread [%ld] starts [%d] length [%d]\n", id, start, length_per_thread);
 	
 	pthread_mutex_lock(&mutex); // se llama esta sección crítica
 	
@@ -91,7 +90,7 @@ int main(int argc, char* argv[]){
 		if (err != 0)
 			printf("[3s-01] Can't create a thread [%ld]\n",i);
 		else
-			printf("[3s-01] Thread created\n");
+			printf("[3s-01] Thread created [%ld]\n", i);
 		i++;
 	}
 	i = 0;

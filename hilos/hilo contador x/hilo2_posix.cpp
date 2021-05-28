@@ -15,6 +15,11 @@ int main(){
 	}
 	while (++y <MAX);
 	printf("y increment finished\n");
+	// esperamos al a todos los hilos
+	if(pthread_join(inc_x_thread,NULL)){	// función de barrera, el programa q está ejecutándose hasta aquí, no va a continuar en la proxima instrucción hasta que se termine de ejecutar el hilo
+		fprintf(stderr, "Error joining thread\n");
+		return 2;
+	}
 	printf("X: %d, y: %d\n", x, y);
 	return 0;
 }
