@@ -1,0 +1,91 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_THREADS 8
+#define VECTOR_SIZE 100000000
+
+// Vector de identificadores de hilos
+pthread_t tid[MAX_THREADS]; // vector de tipo hilo, almacenar los identificadores de todos los hilos q vamos creando
+
+// variables globales
+int *array; // un apuntador a un vector de enteros
+int length = VECTOR_SIZE; // máxima longitud del vector
+int count = 0;
+int double_count = 0;
+int max_threads = MAX_THREADS; // máximo de números de hilos que se pueden lanzar
+
+// Función usada por la función 'pthread_create'.'pthread_create' crea un nuevo hilo quien se dedicará a ejecutar esta función
+void *count3s_thread(void *arg){
+	int i;
+	int length_per_thread = length / max_threads; // cada hilo procese una parte del vector, la longitud del vector que va a procesar cada hilo
+	int id = (long)arg; //  cual es la posición o el identificador del hilo
+	int start = id * length_per_thread; //donde arrancamos para procesar los elementos del vector, es calcular el punto de inicio
+	//cada hilo arranca del punto de hilo start y hasta longitud del vector
+	for(i = start; i < start + length_per_thread; i++){
+		if (array[i] == 3){
+			count++;
+		}
+	}
+	return NULL;
+	
+	//pthread_exit(NULL);
+}
+
+//inicializador del vector
+// Función que inicializa los elementos del vector y cuanta cuants vesces se genero el numero '3'
+void initialize_vector(){
+	int i = 0;
+	array = (int*) malloc(sizeof(int) * VECTOR_SIZE); // La asignación dinámica de memoria en el Lenguaje de programación C, se crea espacio en el arreglo
+	if(array == NULL){
+		printf("Allocation memory failed\n");
+		exit(-1);
+	}
+	for(;i < VECTOR_SIZE; i++){
+		array[i] = rand() % 20;
+		if (array[i] == 3)
+			double_count++;
+	}
+}
+
+int main(int argc, char* argv[]){
+	long i = 0;
+	int err;
+	clock_t t1, t2;
+	// se puede pasar por argumentos el número de hilos que se quiere invocar para procesar el vector
+
+	if (argc == 2){
+		max_threads = atoi(argv[1]); // atoi = Convierte una cadena a su valor numérico (entero)
+		if (max_threads > MAX_THREADS)
+			max_threads = MAX_THREADS;
+
+	}else{
+		max_threads = MAX_THREADS;
+	}
+	printf("Running 3s-00 Using %d threads\n", max_threads);
+	
+	srand(time(NULL));
+	printf("*** 3s-01 ***\n");
+	printf("Initializing vector.... ");
+	fflush(stdout);
+	initialize_vector();
+	printf("Vector initialized! \n");
+	fflush(stdout);
+	t1 = clock();
+	// comienza el procesamiento
+	while(i < max_threads){
+		err = pthread_create(&tid[i], NULL, &count3s_thread, (void*)i);
+		if (err != 0)
+			printf("[3s-01] Can't create a thread [%ld]\n",i);
+		else
+			printf("[3s-01] Thread created [%ld]\n", i);
+		i++;
+	}
+	t2 = clock();
+	printf("[3s-01] Count by threads %d\n",count);
+	printf("[3s-01] Double check %d!\n",double_count);
+	printf("[3s-01] Elapsed time %f\n",(((float)t2 - (float)t1) /1000000.0F) * 1000);
+	printf("Finishing 3s-00");
+	return 0;
+}
