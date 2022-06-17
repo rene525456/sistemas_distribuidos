@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/LabRMI/libsBD4o/db4o-sql-r27-db4o-7.4-java5.jar"/>
+	<classpathentry kind="lib" path="C:/LabRMI/libsBD4o/db4o-7.4.106.13438-instrumentation.jar"/>
+	<classpathentry kind="lib" path="C:/LabRMI/libsBD4o/db4o-7.4.106.13438-java5.jar"/>
+	<classpathentry kind="lib" path="C:/LabRMI/libsBD4o/db4o-7.4.106.13438-taj.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
